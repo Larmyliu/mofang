@@ -6,7 +6,7 @@ const Three = require('three')
 const Cube = require('cubejs')
 import App from './App.vue'
 import '../static/common.css'
-
+import router from './router'
 //Vue.config.productionTip = false
 Vue.prototype.$three = Three;
 
@@ -14,5 +14,6 @@ Vue.prototype.$three = Three;
 new Vue({
   el: '#app',
   components: { App },
+  router,
   template: '<App/>'
 })

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Rubik/>
+    <router-view />
   </div>
 </template>
 
