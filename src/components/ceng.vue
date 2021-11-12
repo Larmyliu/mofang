@@ -10,7 +10,7 @@
       <el-col :span="5" :offset="off">
         <scanner :randomRotate=randomRotateLoading :autoRest=autoRestRunning :acceptString=acceptStringRunning @accept="statusChange" />
         <el-button type="primary" icon="el-icon-refresh" circle @click="randomRotate" :loading=randomRotateLoading :disabled="status"></el-button>
-        <el-button type="success" icon="el-icon-success" circle @click="autoRest" :loading=autoRestRunning :disabled="status"></el-button>
+        <el-button type="success" icon="el-icon-success" circle @click="autoResetV1" :loading=autoRestRunning :disabled="status"></el-button>
         <el-button type="success" icon="el-icon-arrow-right" circle @click="autoRestOneStep" :disabled="status"></el-button>
       </el-col>
     </el-row>
@@ -38,12 +38,13 @@
 </template>
 
 <script>
-import { init, randomRotate, autoRest, autoRestOneStep, randomRotateLoading, autoRestRunning, changeSpeed, acceptStringRunning, stepCount, acceptMethod, clearAll, autoRunOneStep } from '../utils/Rubik.js'
+// import { init, randomRotate, autoRest, autoRestOneStep, randomRotateLoading, autoRestRunning, changeSpeed, acceptStringRunning, stepCount, acceptMethod, clearAll, autoRunOneStep } from '../utils/Rubik.js'
+import {init,randomRotate, autoResetV1, stepCount, autoRestRunning} from '../utils/ceng'
 import { initBackground } from '../utils/background.js'
 import scanner from './scanner'
 
 export default {
-  name: 'Rubik',
+  name: 'Ceng',
   components: {
     scanner
   },
@@ -85,18 +86,18 @@ export default {
       }, {
         label: '六面三条',
         value: '六面三条'
-      }]      
+      }]
     }
   },
 
   created() {
-    var _this = this;
-    document.onkeydown = function(e) {
-        let key = window.event.keyCode
-        if (key === 32 && !_this.status) {
-            _this.autoRestOneStep()
-        }
-    }
+    // var _this = this;
+    // document.onkeydown = function(e) {
+    //     let key = window.event.keyCode
+    //     if (key === 32 && !_this.status) {
+    //         _this.autoRestOneStep()
+    //     }
+    // }
   },
 
   mounted() {
@@ -133,10 +134,10 @@ export default {
       }
     },
 
-    async autoRest() {
+    async autoResetV1() {
       if(this.play === '自由模式') {
         this.autoRestRunning = true
-        autoRest(this.speed)
+        autoResetV1(this.speed)
         while(this.autoRestRunning) {
           await this.sleep(this.speed*2)
           this.autoRestRunning = autoRestRunning
