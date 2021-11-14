@@ -9,9 +9,10 @@
       </el-col>
       <el-col :span="5" :offset="off">
         <scanner :randomRotate=randomRotateLoading :autoRest=autoRestRunning :acceptString=acceptStringRunning @accept="statusChange" />
-        <el-button type="primary" icon="el-icon-refresh" circle @click="randomRotate" :loading=randomRotateLoading :disabled="status"></el-button>
-        <el-button type="success" icon="el-icon-success" circle @click="autoRest" :loading=autoRestRunning :disabled="status"></el-button>
-        <el-button type="success" icon="el-icon-arrow-right" circle @click="autoRestOneStep" :disabled="status"></el-button>
+        <el-button type="primary" icon="el-icon-refresh" circle @click="randomRotate" :loading=randomRotateLoading :disabled="status">随机</el-button>
+        <el-button type="success" icon="el-icon-success" circle @click="autoRest" :loading=autoRestRunning :disabled="status">还原</el-button>
+        <el-button type="success" icon="el-icon-arrow-right" circle @click="autoRestOneStep" :disabled="status">单步还原</el-button>
+        <el-button type="success" icon="el-icon-edit-outline" circle @click="randomRotateAndRest" :disabled="status">报表生成</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -41,7 +42,6 @@
 import { init, randomRotate, autoRest, autoRestOneStep, randomRotateLoading, autoRestRunning, changeSpeed, acceptStringRunning, stepCount, acceptMethod, clearAll, autoRunOneStep } from '../utils/Rubik.js'
 import { initBackground } from '../utils/background.js'
 import scanner from './scanner'
-
 export default {
   name: 'Rubik',
   components: {
@@ -85,7 +85,7 @@ export default {
       }, {
         label: '六面三条',
         value: '六面三条'
-      }]      
+      }]
     }
   },
 
@@ -119,6 +119,43 @@ export default {
   },
 
   methods: {
+    async randomRotateAndRest(){
+      this.$prompt('请输入随机还原次数', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^([1-9]\d*)$/,
+          inputErrorMessage: '请输入正确的数字'
+        }).then(async ({ value }) => {
+          this.$message({
+            type: 'success',
+            message: `你的数字输入的是: ${value}，正在执行中，请勿关闭页面`
+          });
+          await this.beginInputCountsRest(value)
+        })
+    },
+    async beginInputCountsRest(value){
+      console.log(+value)
+      let resetCountList = []
+      for(let i = 0; i < +value; i++){
+        if(!this.randomRotateLoading){
+          await this.randomRotate()
+        }
+        await this.sleep(1000)
+        await this.autoRest();
+        await this.sleep(1000)
+        resetCountList.push(this.steps)
+      }
+      let req = {
+        name: `Rubik_${((new Date).getTime())}`,
+        source_data: resetCountList.join(",")
+      }
+      console.log(resetCountList)
+      this.$Apply.dataReport.uploadData(req).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+          console.log(err)
+      })
+    },
     async randomRotate() {
       if(this.play === '自由模式') {
         this.randomRotateLoading = true
@@ -263,6 +300,14 @@ export default {
       if(this.status)
         return
       this.dialogVisible = true
+    },
+    writeData(data){
+      var fso = new ActiveXObject(Scripting.FileSystemObject);
+      var name = "Rubik_" + ((new Date()).getTime())
+      var f   = fso.createtextfile(`../source_data/${name}`,2,true);
+      f.writeLine(data);  //写入内容
+      f.close(); //关闭对象
+      this.$message.success(`数据文件${name}已保存`)
     }
   },
 

@@ -6,12 +6,18 @@ const ElementUI = require('element-ui')
 const Three = require('three')
 const Cube = require('cubejs')
 import App from './App.vue'
+
 import '../static/common.css'
 import router from './router'
+import Apply from './api/api'
+Vue.use(Apply)
+// import axios from 'axios'
+// Vue.prototype.$Apply = axios
 //Vue.config.productionTip = false
 Vue.prototype.$three = Three;
 // 若是没有开启Devtools工具，在开发环境中开启，在生产环境中关闭
-Vue.config.devtools = true
+// Vue.config.devtools = true
+
 // if (process.env.NODE_ENV == 'development') {
 //   Vue.config.devtools = true;
 // } else {

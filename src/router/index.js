@@ -7,7 +7,7 @@ export default new Router({
   routes:[
     {
       path:"/",
-      redirect:'/Ceng'
+      redirect:'/Rubik'
     },
     {
       path:'/Rubik',

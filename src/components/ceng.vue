@@ -9,9 +9,10 @@
       </el-col>
       <el-col :span="5" :offset="off">
         <scanner :randomRotate=randomRotateLoading :autoRest=autoRestRunning :acceptString=acceptStringRunning @accept="statusChange" />
-        <el-button type="primary" icon="el-icon-refresh" circle @click="randomRotate" :loading=randomRotateLoading :disabled="status"></el-button>
-        <el-button type="success" icon="el-icon-success" circle @click="autoResetV1" :loading=autoRestRunning :disabled="status"></el-button>
-        <el-button type="success" icon="el-icon-arrow-right" circle @click="autoRestOneStep" :disabled="status"></el-button>
+        <el-button type="primary" icon="el-icon-refresh" circle @click="randomRotate" :loading=randomRotateLoading :disabled="status">随机</el-button>
+        <el-button type="success" icon="el-icon-success" circle @click="autoResetV1" :loading=autoRestRunning :disabled="status">还原</el-button>
+        <el-button type="success" icon="el-icon-arrow-right" circle @click="autoRestOneStep" :disabled="status">单步还原</el-button>
+        <el-button type="success" icon="el-icon-edit-outline" circle @click="autoRestOneStep" :disabled="status">报表生成</el-button>
       </el-col>
     </el-row>
     <el-row>
