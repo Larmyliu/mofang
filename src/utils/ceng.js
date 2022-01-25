@@ -7,7 +7,7 @@ var width = 0; //页面宽度
 var height = 0; //页面高度
 var raycaster = new THREE.Raycaster(); //光线碰撞检测器
 var mouse = new THREE.Vector2(); //存储鼠标坐标或者触摸坐标
-var isRotating = false; //魔方是否正在转动
+export var isRotating = false; //魔方是否正在转动
 var intersect; //碰撞光线穿过的元素
 var normalize; //触发平面法向量
 var startPoint; //触发点
@@ -25,6 +25,7 @@ var YLine = null;
 var YLineAd = null;
 var ZLine = null;
 var ZLineAd = null;
+export var randomRotateLoading = false;
 export var stepCount = 0;
 export var autoRestRunning = false;
 var originPoint = null;
@@ -60,7 +61,7 @@ export function randomRotate() {
 
 
 //自动还原第一版
-var isAutoReset = false;
+export var isAutoReset = false;
 var currentStep = 1;
 var bottomColor;
 var topColor;

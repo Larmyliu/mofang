@@ -3,14 +3,15 @@
 // const Vue = require('vue')
 import Vue from 'vue'
 const ElementUI = require('element-ui')
+
 const Three = require('three')
 const Cube = require('cubejs')
 import App from './App.vue'
 
-import '../static/common.css'
 import router from './router'
 import Apply from './api/api'
 Vue.use(Apply)
+
 // import axios from 'axios'
 // Vue.prototype.$Apply = axios
 //Vue.config.productionTip = false

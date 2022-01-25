@@ -12,7 +12,7 @@
         <el-button type="primary" icon="el-icon-refresh" circle @click="randomRotate" :loading=randomRotateLoading :disabled="status">随机</el-button>
         <el-button type="success" icon="el-icon-success" circle @click="autoResetV1" :loading=autoRestRunning :disabled="status">还原</el-button>
         <el-button type="success" icon="el-icon-arrow-right" circle @click="autoRestOneStep" :disabled="status">单步还原</el-button>
-        <el-button type="success" icon="el-icon-edit-outline" circle @click="autoRestOneStep" :disabled="status">报表生成</el-button>
+        <el-button type="success" icon="el-icon-edit-outline" circle @click="randomRotateAndRest" :disabled="status">报表生成</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -39,8 +39,9 @@
 </template>
 
 <script>
-// import { init, randomRotate, autoRest, autoRestOneStep, randomRotateLoading, autoRestRunning, changeSpeed, acceptStringRunning, stepCount, acceptMethod, clearAll, autoRunOneStep } from '../utils/Rubik.js'
-import {init,randomRotate, autoResetV1, stepCount, autoRestRunning} from '../utils/ceng'
+// import {  autoRestOneStep, changeSpeed, acceptStringRunning, stepCount, acceptMethod, clearAll, autoRunOneStep } from '../utils/Rubik.js'
+// import {init,randomRotate, autoResetV1, stepCount, autoRestRunning,randomRotateLoading, acceptStringRunning,acceptMethod, isRotating } from '../utils/ceng'
+import {init,randomRotate, autoResetV1, stepCount, autoRestRunning, isRotating, isAutoReset} from '../utils/ceng'
 import { initBackground } from '../utils/background.js'
 import scanner from './scanner'
 
@@ -121,20 +122,75 @@ export default {
   },
 
   methods: {
+    async randomRotateAndRest(){
+      this.$prompt('请输入随机还原次数', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^([1-9]\d*)$/,
+          inputErrorMessage: '请输入正确的数字'
+        }).then(async ({ value }) => {
+          this.$message({
+            type: 'success',
+            message: `你的数字输入的是: ${value}，正在执行中，请勿关闭页面`
+          });
+          this.beginInputCountsRest(value)
+        })
+    },
+    async beginInputCountsRest(value){
+      console.log(+value)
+      let resetCountList = []
+      let i = 0;
+      while(i < +value){
+
+        if(this.randomRotateLoading == false){
+
+          await this.randomRotatePromise().then(()=> this.sleep(1000)).then(() => this.autoResetV1Promise()).then(()=> this.sleep(1000))
+          .then(() => {
+            i++;
+            resetCountList.push(this.steps)
+          })
+        }
+      }
+      let req = {
+        name: `Ceng_${((new Date).getTime())}`,
+        source_data: resetCountList.join(",")
+      }
+      console.log("上报"+resetCountList)
+      this.$Apply.dataReport.uploadData(req).then((res) => {
+        console.log(res)
+      }).catch((err) => {
+          console.log(err)
+      })
+    },
+    randomRotatePromise() {
+      return new Promise(async(resolve) => {
+        await this.randomRotate()
+        resolve()
+      }, (reject) => {
+        reject()
+      })
+    },
     async randomRotate() {
       if(this.play === '自由模式') {
         this.randomRotateLoading = true
         randomRotate(this.speed)
         while(this.randomRotateLoading) {
           await this.sleep(this.speed*2)
-          this.randomRotateLoading = randomRotateLoading
+          this.randomRotateLoading = isAutoReset
         }
       }
       else if(this.play === '练习模式') {
         clearAll()
       }
     },
-
+    async autoResetV1Promise(){
+      this.autoRestRunning = true
+        await autoResetV1(this.speed)
+        while(this.autoRestRunning) {
+          await this.sleep(this.speed*2)
+          this.autoRestRunning = autoRestRunning
+        }
+    },
     async autoResetV1() {
       if(this.play === '自由模式') {
         this.autoRestRunning = true
@@ -216,7 +272,7 @@ export default {
 
       while(this.autoRestRunning) {
         await this.sleep(this.speed*1.5)
-        this.autoRestRunning = autoRestRunning
+        this.autoRestRunning = isRotating
       }
     },
 
@@ -249,7 +305,9 @@ export default {
     },
 
     updateTime() {
+      // debugger
       this.steps = stepCount
+      this.autoRestRunning = isRotating
     },
 
     changePlay() {
@@ -270,7 +328,8 @@ export default {
 
   computed: {
     status() {
-      return (this.randomRotateLoading || this.autoRestRunning || this.acceptStringRunning)
+      console.log(`当前步数${this.steps}, 当前状态${this.autoRestRunning}`)
+      return (this.randomRotateLoading || this.autoRestRunning)
     }
   },
 
@@ -280,6 +339,7 @@ export default {
     },
 
     method() {
+
       this.dialogVisible = false
       switch(this.method) {
         case '六面回字':
