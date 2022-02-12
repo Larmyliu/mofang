@@ -43,11 +43,14 @@ var cubeParams = { //魔方参数
 };
 
 //随机旋转，用于打乱魔方
-export function randomRotate() {
+export async function randomRotate() {
   stepCount = 0;
   if (!isRotating && !isAutoReset) {
-    var stepNum = parseInt(20 * Math.random()) + 1; //保证至少转动一步
+    var stepNum = parseInt(40 * Math.random());
     //var stepNum = 0;
+    if(stepNum < 20) {
+      stepNum = 20;  // 至少动20步
+    }
     console.log('random rotate ' + stepNum);
     var funcArr = [R, U, F, B, L, D, r, u, f, b, l, d];
     var stepArr = [];
@@ -55,7 +58,7 @@ export function randomRotate() {
       var num = parseInt(Math.random() * funcArr.length);
       stepArr.push(funcArr[num]);
     }
-    runMethodAtNo(stepArr, 0, 0);
+    await runMethodAtNo(stepArr, 0, 0);
   }
 }
 
@@ -68,7 +71,7 @@ var topColor;
 var startTime = 0;
 var endTime = 0;
 
-export function autoResetV1(cubes) {
+export async function autoResetV1(cubes) {
   if (!checkStep8() && !isRotating) {
     console.log('start autoResetV1');
     startTime = window.performance.now();
@@ -79,7 +82,7 @@ export function autoResetV1(cubes) {
     var topCenter = getCubeByIndex(10); //获取上表面中心小方块
     topColor = getFaceColorByVector(topCenter, YLine); //获取上表面颜色
     bottomColor = getOppositeColor(topColor); //获取上表面颜色对应色
-
+    var moves = await cube.solve();
     if (checkStep7()) {
       currentStep = 8;
       console.log('start step8');
@@ -582,7 +585,7 @@ function step4() {
     step5();
     return;
   }
-
+  debugger
   step4Face(currentFaceNo);
 
   if (!isRotating) {
@@ -1390,20 +1393,22 @@ function step1Case4(rotateNum) {
  * @param  {[type]}   rotateNum [旋转次数]
  * @param  {Function} next      [所有方法执行完成之后回调]
  */
-function runMethodAtNo(arr, no, rotateNum, next) {
+ async function runMethodAtNo(arr, no, rotateNum, next) {
   if (no >= arr.length - 1) {
     if (next) {
       arr[no](rotateNum, next);
+      randomRotateLoading = false;
       autoRestRunning = false;
     } else {
       arr[no](rotateNum);
+      randomRotateLoading = false;
       autoRestRunning = false;
     }
   } else {
-    arr[no](rotateNum, function () {
+    arr[no](rotateNum, async function () {
       if (no < arr.length - 1) {
         no++
-        runMethodAtNo(arr, no, rotateNum, next);
+        await runMethodAtNo(arr, no, rotateNum, next);
       }
     })
   }

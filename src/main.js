@@ -2,7 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 // const Vue = require('vue')
 import Vue from 'vue'
-const ElementUI = require('element-ui')
 
 const Three = require('three')
 const Cube = require('cubejs')
@@ -25,6 +24,18 @@ Vue.prototype.$three = Three;
 //   Vue.config.devtools = false;
 // }
 /* eslint-disable no-new */
+
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';   // 默认主题
+// import '../static/css/theme-green/index.css';       // 浅绿色主题
+import SIdentify from './components/Identify.vue';    //自定义组件
+import "babel-polyfill";
+
+Vue.component("SIdentify",SIdentify);
+Vue.use(ElementUI);
+
+
+
 new Vue({
   el: '#app',
   components: { App },
