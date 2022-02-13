@@ -164,7 +164,9 @@ export default {
     },
     randomRotatePromise() {
       return new Promise(async(resolve) => {
+        console.log("随机开始")
         await this.randomRotate()
+        console.log("随机结束")
         resolve()
       }, (reject) => {
         reject()
@@ -173,7 +175,7 @@ export default {
     async randomRotate() {
       if(this.play === '自由模式') {
         this.randomRotateLoading = true
-        randomRotate(this.speed)
+        await randomRotate(this.speed)
         while(this.randomRotateLoading) {
           await this.sleep(this.speed*2)
           this.randomRotateLoading = isAutoReset
@@ -185,11 +187,13 @@ export default {
     },
     async autoResetV1Promise(){
       this.autoRestRunning = true
-        await autoResetV1(this.speed)
-        while(this.autoRestRunning) {
-          await this.sleep(this.speed*2)
-          this.autoRestRunning = autoRestRunning
-        }
+      console.log("还原开始")
+      await autoResetV1(this.speed)
+      console.log("还原结束")
+      while(this.autoRestRunning) {
+        await this.sleep(this.speed*2)
+        this.autoRestRunning = autoRestRunning
+      }
     },
     async autoResetV1() {
       if(this.play === '自由模式') {
@@ -293,6 +297,7 @@ export default {
     },
 
     sleep(ms) {
+      console.log("暂停1000ms")
       return new Promise(resolve => setTimeout(resolve, ms));
     },
 
