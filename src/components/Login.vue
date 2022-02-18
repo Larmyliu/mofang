@@ -84,6 +84,7 @@
                         // })
                         self.$Apply.user.login(self.ruleForm).then(res => {
                           if(res.data.code == 0){
+                            window.localStorage.setItem("userid", res.data.data.userid)
                             self.$router.push('/readme');
                           }
                           else{

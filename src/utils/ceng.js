@@ -26,6 +26,7 @@ var YLineAd = null;
 var ZLine = null;
 var ZLineAd = null;
 export var randomRotateLoading = false;
+export var autoRestOneStepStatus = false;
 export var stepCount = 0;
 export var autoRestRunning = false;
 var originPoint = null;
@@ -70,7 +71,58 @@ var bottomColor;
 var topColor;
 var startTime = 0;
 var endTime = 0;
+export function autoRestOneStep(cubes) {
+  debugger
+  if (!checkStep8() && !isRotating) {
+    console.log('start autoRestOneStep');
+    startTime = window.performance.now();
+    console.log('start at:' + startTime);
+    autoRestOneStepStatus = true
+    autoRestRunning = true;
+    var topCenter = getCubeByIndex(10); //获取上表面中心小方块
+    topColor = getFaceColorByVector(topCenter, YLine); //获取上表面颜色
+    bottomColor = getOppositeColor(topColor); //获取上表面颜色对应色
 
+    if (checkStep7()) {
+      currentStep = 8;
+      console.log('start step8');
+      step8();
+    } else if (checkStep6()) {
+      currentStep = 7;
+      console.log('start step7');
+      step7();
+    } else if (checkStep5()) {
+      currentStep = 6;
+      console.log('start step6');
+      step6();
+    } else if (checkStep4()) {
+      currentStep = 5;
+      console.log('start step5');
+      step5();
+    } else if (checkStep3()) {
+      currentStep = 4;
+      startFaceNo = 0;
+      currentFaceNo = 0;
+      endFaceNo = 3;
+      console.log('start step4');
+      step4();
+    } else if (checkStep2()) {
+      currentStep = 3;
+      console.log('start step3');
+      step3();
+    } else if (checkStep1()) {
+      currentStep = 2;
+      console.log('start step2');
+      step2();
+    } else {
+      currentStep = 1;
+      console.log('start step1');
+      step1();
+    }
+  } else {
+    console.log('already reset');
+  }
+}
 export async function autoResetV1(cubes) {
   if (!checkStep8() && !isRotating) {
     console.log('start autoResetV1');
@@ -292,17 +344,29 @@ function step7Case1(rotateNum) {
     if (getFaceColorByVector(cube1, zLine) != zLine4Color &&
       zLine4Color == getFaceColorByVector(cube11, xLine) &&
       zLine4Color != getFaceColorByVector(cube14, xLine)) {
+      autoRestOneStepStatus = true
       F(rotateNum, function () {
+        autoRestOneStepStatus = true
         F(rotateNum, function () {
+          autoRestOneStepStatus = true
           U(rotateNum, function () {
+            autoRestOneStepStatus = true
             r(rotateNum, function () {
+              autoRestOneStepStatus = true
               L(rotateNum, function () {
+                autoRestOneStepStatus = true
                 F(rotateNum, function () {
+                  autoRestOneStepStatus = true
                   F(rotateNum, function () {
+                    autoRestOneStepStatus = true
                     R(rotateNum, function () {
+                      autoRestOneStepStatus = true
                       l(rotateNum, function () {
+                        autoRestOneStepStatus = true
                         U(rotateNum, function () {
+                          autoRestOneStepStatus = true
                           F(rotateNum, function () {
+                            autoRestOneStepStatus = true
                             F(rotateNum)
                           })
                         })
@@ -332,16 +396,27 @@ function step7Case2(rotateNum) {
       zLine1Color == getFaceColorByVector(cube14, xLine) &&
       zLine1Color != getFaceColorByVector(cube11, xLine)) {
       F(rotateNum, function () {
+        autoRestOneStepStatus = true
         F(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             r(rotateNum, function () {
+              autoRestOneStepStatus = true
               L(rotateNum, function () {
+                autoRestOneStepStatus = true
                 F(rotateNum, function () {
+                  autoRestOneStepStatus = true
                   F(rotateNum, function () {
+                    autoRestOneStepStatus = true
                     R(rotateNum, function () {
+                      autoRestOneStepStatus = true
                       l(rotateNum, function () {
+                        autoRestOneStepStatus = true
                         u(rotateNum, function () {
+                          autoRestOneStepStatus = true
                           F(rotateNum, function () {
+                            autoRestOneStepStatus = true
                             F(rotateNum)
                           })
                         })
@@ -549,7 +624,9 @@ function step5Case3(rotateNum) {
       getFaceColorByVector(cube1, zLine) == topColor &&
       getFaceColorByVector(cube11, xLine) == topColor) {
       rotate501(rotateNum, function () {
+        autoRestOneStepStatus = true
         U(rotateNum, function () {
+          autoRestOneStepStatus = true
           rotate502(rotateNum);
         })
       });
@@ -665,6 +742,7 @@ function step4Face(rotateNum) {
       } else if (getFaceColorByVector(cube9, xLineAd) == zLine4Color &&
         (getFaceColorByVector(cube9, YLine) == xLineAd6Color || rotateNum == startFaceNo)) {
         u(0, function () {
+          autoRestOneStepStatus = true
           rotate401(rotateNum - 1);
         });
         return;
@@ -690,7 +768,9 @@ function step4Face(rotateNum) {
         (getFaceColorByVector(cube3, zLine) == xLineAd6Color || rotateNum == startFaceNo)) {
         var tempNum = rotateNum - 1;
         rotate402(tempNum, function () {
+          autoRestOneStepStatus = true
           U(tempNum, function () {
+            autoRestOneStepStatus = true
             rotate401(tempNum);
           });
         });
@@ -721,6 +801,7 @@ function step4Face(rotateNum) {
       } else if (getFaceColorByVector(cube11, xLine) == zLine4Color &&
         (getFaceColorByVector(cube11, YLine) == xLine14Color || rotateNum != endFaceNo)) {
         U(0, function () {
+          autoRestOneStepStatus = true
           rotate402(rotateNum);
         });
         return;
@@ -876,7 +957,9 @@ function step3Case1(rotateNum, startNum) {
         getFaceColorByVector(cube14, xLine) == yLine2Color &&
         getFaceColorByVector(cube17, xLine) == yLine2Color) {
         R(rotateNum, function () {
+          autoRestOneStepStatus = true
           U(rotateNum, function () {
+            autoRestOneStepStatus = true
             r(rotateNum)
           })
         })
@@ -926,12 +1009,15 @@ function step3Case2(rotateNum, startNum) {
         getFaceColorByVector(cube14, xLine) == xLine2Color &&
         getFaceColorByVector(cube17, xLine) == xLine2Color) {
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             F(rotateNum)
           })
         })
       } else {
         u(rotateNum, function () {
+          autoRestOneStepStatus = true
           rotateNum++;
           if (rotateNum >= 4) {
             rotateNum = 0;
@@ -977,9 +1063,13 @@ function step3Case3(rotateNum, startNum) {
         getFaceColorByVector(cube7, zLine) == xLine2Color) {
         //转换为第二种情况
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             u(rotateNum, function () {
+              autoRestOneStepStatus = true
               F(rotateNum, function () {
+                autoRestOneStepStatus = true
                 U(rotateNum)
               })
             })
@@ -987,6 +1077,7 @@ function step3Case3(rotateNum, startNum) {
         })
       } else {
         u(rotateNum, function () {
+          autoRestOneStepStatus = true
           rotateNum++;
           if (rotateNum >= 4) {
             rotateNum = 0;
@@ -1028,14 +1119,18 @@ function step3Case4(rotateNum) {
         getFaceColorByVector(cube7, zLine) == yLineAd8Color) {
         //转换为第一种情况
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           U(rotateNum, function () {
+            autoRestOneStepStatus = true
             F(rotateNum)
           })
         })
       } else {
         //转换为第三种情况
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             F(rotateNum)
           })
         })
@@ -1063,8 +1158,11 @@ function step3Case5(rotateNum) {
         getFaceColorByVector(cube17, xLine) == yLineAd8Color) {
         //转换为第二种情况
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             F(rotateNum, function () {
+              autoRestOneStepStatus = true
               U(rotateNum)
             })
           })
@@ -1072,7 +1170,9 @@ function step3Case5(rotateNum) {
       } else {
         //转换为第三种情况
         R(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             r(rotateNum)
           })
         })
@@ -1165,10 +1265,12 @@ function step2Case1(rotateNum) {
     if (getFaceColorByVector(cube1, YLine) == bottomColor) {
       if (getFaceColorByVector(cube1, zLine) == getFaceColorByVector(cube4, zLine)) {
         F(rotateNum, function () {
+          autoRestOneStepStatus = true
           F(rotateNum);
         });
       } else {
         u(rotateNum, function () {
+          autoRestOneStepStatus = true
           rotateNum++;
           if (rotateNum >= 4) {
             rotateNum = 0;
@@ -1190,13 +1292,17 @@ function step2Case2(rotateNum) {
       getFaceColorByVector(cube8, YLineAd) == bottomColor) {
       if (getCubeByIndex(cube2, xLine) != bottomColor) {
         R(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             r(rotateNum);
           });
         })
       } else {
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             F(rotateNum);
           });
         })
@@ -1215,13 +1321,17 @@ function step2Case3(rotateNum) {
       getFaceColorByVector(cube6, YLineAd) == bottomColor) {
       if (getFaceColorByVector(cube0, xLineAd) != bottomColor) {
         l(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             L(rotateNum)
           });
         })
       } else {
         f(rotateNum, function () {
+          autoRestOneStepStatus = true
           u(rotateNum, function () {
+            autoRestOneStepStatus = true
             F(rotateNum);
           });
         })
@@ -1406,6 +1516,7 @@ function step1Case4(rotateNum) {
     }
   } else {
     arr[no](rotateNum, async function () {
+      console.log(arr)
       if (no < arr.length - 1) {
         no++
         await runMethodAtNo(arr, no, rotateNum, next);
@@ -1422,7 +1533,9 @@ function U(rotateNum, next) {
   var zLine = rotateAxisByYLine(ZLine, rotateNum);
   var xLineAd = rotateAxisByYLine(XLineAd, rotateNum);
   normalize = zLine;
-  rotateMove(cube2, xLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube2, xLineAd, next);
+  }
 }
 
 function u(rotateNum, next) {
@@ -1431,7 +1544,10 @@ function u(rotateNum, next) {
   var xLine = rotateAxisByYLine(XLine, rotateNum);
   var zLineAd = rotateAxisByYLine(ZLineAd, rotateNum);
   normalize = xLine;
-  rotateMove(cube2, zLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube2, zLineAd, next);
+  }
+
 }
 
 function F(rotateNum, next) {
@@ -1439,7 +1555,10 @@ function F(rotateNum, next) {
   var cube2 = getCubeByIndex(2, rotateNum);
   var xLine = rotateAxisByYLine(XLine, rotateNum);
   normalize = xLine;
-  rotateMove(cube2, YLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube2, YLineAd, next);
+  }
+
 }
 
 function f(rotateNum, next) {
@@ -1447,7 +1566,10 @@ function f(rotateNum, next) {
   var cube2 = getCubeByIndex(2, rotateNum);
   var xLineAd = rotateAxisByYLine(XLineAd, rotateNum);
   normalize = YLine;
-  rotateMove(cube2, xLineAd, next)
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube2, xLineAd, next)
+  }
+
 }
 
 function L(rotateNum, next) {
@@ -1455,7 +1577,10 @@ function L(rotateNum, next) {
   var cube0 = getCubeByIndex(0, rotateNum);
   var zLine = rotateAxisByYLine(ZLine, rotateNum);
   normalize = zLine;
-  rotateMove(cube0, YLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube0, YLineAd, next);
+  }
+
 }
 
 function l(rotateNum, next) {
@@ -1463,7 +1588,10 @@ function l(rotateNum, next) {
   var cube0 = getCubeByIndex(0, rotateNum);
   var zLineAd = rotateAxisByYLine(ZLineAd, rotateNum);
   normalize = YLine;
-  rotateMove(cube0, zLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube0, zLineAd, next);
+  }
+
 }
 
 function D(rotateNum, next) {
@@ -1472,7 +1600,10 @@ function D(rotateNum, next) {
   var xLine = rotateAxisByYLine(XLine, rotateNum);
   var zLineAd = rotateAxisByYLine(ZLineAd, rotateNum);
   normalize = xLine;
-  rotateMove(cube8, zLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube8, zLineAd, next);
+  }
+
 }
 
 function d(rotateNum, next) {
@@ -1481,7 +1612,10 @@ function d(rotateNum, next) {
   var zLine = rotateAxisByYLine(ZLine, rotateNum);
   var xLineAd = rotateAxisByYLine(XLineAd, rotateNum);
   normalize = zLine;
-  rotateMove(cube8, xLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube8, xLineAd, next);
+  }
+
 }
 
 function R(rotateNum, next) {
@@ -1489,7 +1623,10 @@ function R(rotateNum, next) {
   var cube2 = getCubeByIndex(2, rotateNum);
   var zLineAd = rotateAxisByYLine(ZLineAd, rotateNum);
   normalize = YLine;
-  rotateMove(cube2, zLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube2, zLineAd, next);
+  }
+
 }
 
 function r(rotateNum, next) {
@@ -1497,7 +1634,10 @@ function r(rotateNum, next) {
   var cube2 = getCubeByIndex(2, rotateNum);
   var zLine = rotateAxisByYLine(ZLine, rotateNum);
   normalize = zLine;
-  rotateMove(cube2, YLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube2, YLineAd, next);
+  }
+
 }
 
 function B(rotateNum, next) {
@@ -1505,7 +1645,10 @@ function B(rotateNum, next) {
   var cube20 = getCubeByIndex(20, rotateNum);
   var xLine = rotateAxisByYLine(XLine, rotateNum);
   normalize = xLine;
-  rotateMove(cube20, YLine, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube20, YLine, next);
+  }
+
 }
 
 function b(rotateNum, next) {
@@ -1513,7 +1656,10 @@ function b(rotateNum, next) {
   var cube20 = getCubeByIndex(20, rotateNum);
   var xLine = rotateAxisByYLine(XLine, rotateNum);
   normalize = xLine;
-  rotateMove(cube20, YLineAd, next);
+  if(autoRestOneStepStatus || isAutoReset){
+    rotateMove(cube20, YLineAd, next);
+  }
+
 }
 //根据索引素组获取方块
 function getCubeByIndexs(indexs) {
@@ -1997,6 +2143,9 @@ function rotateMove(target, vector, next) {
   window.requestAnimFrame(function (timestamp) {
     rotateAnimation(elements, direction, timestamp, 0, null, next);
   });
+  if(autoRestOneStepStatus){
+    autoRestOneStepStatus = false;
+  }
 }
 function findWhichOperation(direction, elements) {
   var ids = [];

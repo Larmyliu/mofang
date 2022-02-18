@@ -10,8 +10,8 @@
         <el-form-item prop="username" label="用户名称">
           <el-input v-model="form.username" placeholder="请输入用户名称"></el-input>
         </el-form-item>
-        <el-form-item prop="pass" label="密码">
-          <el-input v-model="form.pass" type="password" placeholder="请输入密码"></el-input>
+        <el-form-item prop="password" label="密码">
+          <el-input v-model="form.password" type="password" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item prop="checkPass" label="确认密码">
           <el-input v-model="form.checkPass" type="password" placeholder="请再次输入密码"></el-input>
@@ -68,7 +68,7 @@
       var validatePass2 = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请再次输入密码'));
-        } else if (value !== this.form.pass) {
+        } else if (value !== this.form.password) {
           callback(new Error('两次输入的密码不一致'));
         } else {
           callback();
@@ -104,7 +104,7 @@
       return {
         form: {
           username: '',
-          pass: '',
+          password: '',
           checkPass: '',
           email: '',
           phone: '',
@@ -117,7 +117,7 @@
             message: '请输入用户名',
             trigger: 'blur'
           }],
-          pass: [{
+          password: [{
             required: true,
             validator: validatePass,
             trigger: 'blur'

@@ -147,7 +147,8 @@ export default {
       }
       let req = {
         name: `Rubik_${((new Date).getTime())}`,
-        source_data: resetCountList.join(",")
+        source_data: resetCountList.join(","),
+        userId: window.localStorage.getItem("userid")
       }
       console.log(resetCountList)
       this.$Apply.dataReport.uploadData(req).then((res) => {

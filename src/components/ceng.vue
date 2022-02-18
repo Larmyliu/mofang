@@ -41,7 +41,7 @@
 <script>
 // import {  autoRestOneStep, changeSpeed, acceptStringRunning, stepCount, acceptMethod, clearAll, autoRunOneStep } from '../utils/Rubik.js'
 // import {init,randomRotate, autoResetV1, stepCount, autoRestRunning,randomRotateLoading, acceptStringRunning,acceptMethod, isRotating } from '../utils/ceng'
-import {init,randomRotate, autoResetV1, stepCount, autoRestRunning, isRotating, isAutoReset} from '../utils/ceng'
+import {init,randomRotate, autoResetV1, stepCount, autoRestRunning, isRotating, isAutoReset, autoRestOneStep, autoRestOneStepStatus} from '../utils/ceng'
 import { initBackground } from '../utils/background.js'
 import scanner from './scanner'
 
@@ -54,6 +54,7 @@ export default {
     return {
       randomRotateLoading: false,
       autoRestRunning: false,
+      autoRestOneStepStatus: false,
       acceptStringRunning: false,
       speed: 200,
       off: 3,
@@ -240,7 +241,7 @@ export default {
     async autoRestOneStep() {
       if(this.play === '自由模式') {
         this.autoRestRunning = true
-        autoRestOneStep(this.speed)
+        autoRestOneStep()
       }
       else if(this.play === '练习模式') {
         this.autoRestRunning = true
@@ -313,6 +314,7 @@ export default {
       // debugger
       this.steps = stepCount
       this.autoRestRunning = isRotating
+      this.autoRestOneStepStatus = autoRestOneStepStatus
     },
 
     changePlay() {
@@ -334,7 +336,7 @@ export default {
   computed: {
     status() {
       console.log(`当前步数${this.steps}, 当前状态${this.autoRestRunning}`)
-      return (this.randomRotateLoading || this.autoRestRunning)
+      return (this.randomRotateLoading || this.autoRestRunning || this.autoRestOneStepStatus)
     }
   },
 

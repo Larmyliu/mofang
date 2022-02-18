@@ -43,7 +43,10 @@
     },
     methods: {
       getNameList() {
-        this.$Apply.dataReport.getListName().then(res => {
+        let req = {
+          userId: window.localStorage.getItem("userid")
+        }
+        this.$Apply.dataReport.getListName(req).then(res => {
           this.nameList = res.data.data
         })
       },
